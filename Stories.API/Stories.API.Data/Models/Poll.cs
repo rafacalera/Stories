@@ -10,6 +10,10 @@ namespace Stories.API.Data.Models
     {
         public int Id { get; private set; }
 
-        public bool Like { get; set; }
+        public int StoryId { get; private set; }
+
+        public Story Story { get; set; } = null!;
+
+        public ICollection<Vote> Votes { get; } = new List<Vote>();
     }
 }

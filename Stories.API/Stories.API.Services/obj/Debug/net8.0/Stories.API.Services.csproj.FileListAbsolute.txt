@@ -1,0 +1,16 @@
+C:\dev\git\Stories\Stories.API\Stories.API.Services\bin\Debug\net8.0\Stories.API.Services.deps.json
+C:\dev\git\Stories\Stories.API\Stories.API.Services\bin\Debug\net8.0\Stories.API.Services.dll
+C:\dev\git\Stories\Stories.API\Stories.API.Services\bin\Debug\net8.0\Stories.API.Services.pdb
+C:\dev\git\Stories\Stories.API\Stories.API.Services\bin\Debug\net8.0\Stories.API.Data.dll
+C:\dev\git\Stories\Stories.API\Stories.API.Services\bin\Debug\net8.0\Stories.API.Data.pdb
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.csproj.AssemblyReference.cache
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.AssemblyInfoInputs.cache
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.AssemblyInfo.cs
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.csproj.CoreCompileInputs.cache
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.sourcelink.json
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.csproj.CopyComplete
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.dll
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\refint\Stories.API.Services.dll
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\Stories.API.Services.pdb
+C:\dev\git\Stories\Stories.API\Stories.API.Services\obj\Debug\net8.0\ref\Stories.API.Services.dll

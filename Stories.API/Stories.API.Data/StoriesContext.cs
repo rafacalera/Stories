@@ -25,11 +25,21 @@ namespace Stories.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Story>().ToTable("Stories");
-            modelBuilder.Entity<Story>().HasKey(s => s.Id);
-            modelBuilder.Entity<Story>().Property(s => s.Title).HasMaxLength(80).IsRequired();
-            modelBuilder.Entity<Story>().Property(s => s.Description).HasMaxLength(250).IsRequired();
+            modelBuilder.Entity<Story>()
+                .HasOne(e => e.Poll).WithOne(e => e.Story).HasForeignKey<Poll>(e => e.StoryId).IsRequired();
+            modelBuilder.Entity<Story>().HasKey(e => e.Id);
+            modelBuilder.Entity<Story>().Property(e => e.Title).HasMaxLength(80).IsRequired();
+            modelBuilder.Entity<Story>().Property(e => e.Description).HasMaxLength(250).IsRequired();
 
+            modelBuilder.Entity<Poll>().ToTable("Polls");
+            modelBuilder.Entity<Poll>().HasKey(e => e.Id);
+            modelBuilder.Entity<Poll>().HasMany(e => e.Votes).WithOne(e => e.Poll).HasForeignKey(e => e.PollId).IsRequired();
+            
 
+            modelBuilder.Entity<Vote>().ToTable("Votes");
+            modelBuilder.Entity<Vote>().HasKey(e => e.Id);
+            modelBuilder.Entity<Vote>().Property(e => e.UpVote).IsRequired();
+            modelBuilder.Entity<Vote>().Property(e => e.User).HasMaxLength(100).IsRequired();
         }
     }
 }

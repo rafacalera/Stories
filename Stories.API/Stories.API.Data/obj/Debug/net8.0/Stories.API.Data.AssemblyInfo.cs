@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Stories.API.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e5488ac97de41f718cc955672b0bbfdcb4391dcd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ba169104f1ed3fe3206f41d450a2a40acbd4136")]
 [assembly: System.Reflection.AssemblyProductAttribute("Stories.API.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Stories.API.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

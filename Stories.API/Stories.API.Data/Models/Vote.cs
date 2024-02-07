@@ -8,7 +8,16 @@ namespace Stories.API.Data.Models
 {
     public class Vote
     {
-        public int Id { get; set; }
-        public bool Positive { get; set; }
+        public Vote(bool upVote, string user)
+        {
+            UpVote = upVote;
+            User = user;
+        }
+
+        public int Id { get; private set; }
+        public bool UpVote { get; set; }
+        public string User { get; set; }
+        public int PollId { get; private set; }
+        public Poll Poll { get; set; } = null;
     }
 }
