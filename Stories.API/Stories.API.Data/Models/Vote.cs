@@ -17,7 +17,7 @@ namespace Stories.API.Data.Models
         public int Id { get; private set; }
         public bool UpVote { get; set; }
         public string User { get; set; }
-        public int PollId { get; private set; }
-        public Poll Poll { get; set; } = null;
+        public int StoryId { get; set; }
+        public Story Story { get; set; } = null!;
     }
 }

@@ -12,8 +12,8 @@ namespace Stories.API.Services
     {
         IEnumerable<StoryDTO> GetAll();
         Task<StoryDTO> GetById(int id);
-        Task<StoryDTO> Add(string title, string description);
-        Task<bool> Update(int id, string title, string description);
+        Task<StoryDTO> Add(string title, string description, string departament);
+        Task Update(StoryDTO storyDto);
         Task<bool> Delete(int id);
     }
 }

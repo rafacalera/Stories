@@ -21,25 +21,6 @@ namespace Stories.API.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Stories.API.Data.Models.Poll", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("StoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StoryId")
-                        .IsUnique();
-
-                    b.ToTable("Polls", (string)null);
-                });
-
             modelBuilder.Entity("Stories.API.Data.Models.Story", b =>
                 {
                     b.Property<int>("Id")
@@ -47,6 +28,11 @@ namespace Stories.API.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Departament")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -71,7 +57,7 @@ namespace Stories.API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("PollId")
+                    b.Property<int>("StoryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("UpVote")
@@ -84,41 +70,25 @@ namespace Stories.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PollId");
+                    b.HasIndex("StoryId");
 
                     b.ToTable("Votes", (string)null);
                 });
 
-            modelBuilder.Entity("Stories.API.Data.Models.Poll", b =>
+            modelBuilder.Entity("Stories.API.Data.Models.Vote", b =>
                 {
                     b.HasOne("Stories.API.Data.Models.Story", "Story")
-                        .WithOne("Poll")
-                        .HasForeignKey("Stories.API.Data.Models.Poll", "StoryId")
+                        .WithMany("Votes")
+                        .HasForeignKey("StoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Story");
                 });
 
-            modelBuilder.Entity("Stories.API.Data.Models.Vote", b =>
-                {
-                    b.HasOne("Stories.API.Data.Models.Poll", "Poll")
-                        .WithMany("Votes")
-                        .HasForeignKey("PollId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Poll");
-                });
-
-            modelBuilder.Entity("Stories.API.Data.Models.Poll", b =>
-                {
-                    b.Navigation("Votes");
-                });
-
             modelBuilder.Entity("Stories.API.Data.Models.Story", b =>
                 {
-                    b.Navigation("Poll");
+                    b.Navigation("Votes");
                 });
 #pragma warning restore 612, 618
         }

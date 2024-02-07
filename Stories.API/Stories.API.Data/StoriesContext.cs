@@ -13,6 +13,7 @@ namespace Stories.API.Data
 
         public StoriesContext(DbContextOptions<StoriesContext> options) : base(options) { }
         public DbSet<Story> Story { get; set; }
+        public DbSet<Vote> Vote { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -26,16 +27,15 @@ namespace Stories.API.Data
         {
             modelBuilder.Entity<Story>().ToTable("Stories");
             modelBuilder.Entity<Story>()
-                .HasOne(e => e.Poll).WithOne(e => e.Story).HasForeignKey<Poll>(e => e.StoryId).IsRequired();
+                .HasMany(e => e.Votes)
+                .WithOne(e => e.Story)
+                .HasForeignKey(e => e.StoryId)
+                .IsRequired();
             modelBuilder.Entity<Story>().HasKey(e => e.Id);
             modelBuilder.Entity<Story>().Property(e => e.Title).HasMaxLength(80).IsRequired();
             modelBuilder.Entity<Story>().Property(e => e.Description).HasMaxLength(250).IsRequired();
-
-            modelBuilder.Entity<Poll>().ToTable("Polls");
-            modelBuilder.Entity<Poll>().HasKey(e => e.Id);
-            modelBuilder.Entity<Poll>().HasMany(e => e.Votes).WithOne(e => e.Poll).HasForeignKey(e => e.PollId).IsRequired();
+            modelBuilder.Entity<Story>().Property(e => e.Departament).HasMaxLength(50).IsRequired();
             
-
             modelBuilder.Entity<Vote>().ToTable("Votes");
             modelBuilder.Entity<Vote>().HasKey(e => e.Id);
             modelBuilder.Entity<Vote>().Property(e => e.UpVote).IsRequired();

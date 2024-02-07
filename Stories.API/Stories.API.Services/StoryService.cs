@@ -1,4 +1,5 @@
-﻿using Stories.API.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Stories.API.Data;
 using Stories.API.Data.Models;
 using Stories.API.Services.Models;
 
@@ -8,14 +9,14 @@ namespace Stories.API.Services
     {
         private readonly StoriesContext _context;
 
-        private bool IsStoryValid(string title, string description)
+        private bool IsStoryValid(string title, string description, string departament)
         {
-            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description))
+            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description) || string.IsNullOrWhiteSpace(departament))
             {
                 return false;
             }
 
-            if (title.Length > 80 || description.Length > 250)
+            if (title.Length > 80 || description.Length > 250 || departament.Length > 50)
             {
                 return false;
             } 
@@ -28,21 +29,19 @@ namespace Stories.API.Services
             _context = context;
         }
 
-        public async Task<StoryDTO> Add(string title, string description)
+        public async Task<StoryDTO> Add(string title, string description, string departament)
         {
 
-            if (!IsStoryValid(title, description))
+            if (!IsStoryValid(title, description, departament))
                 throw new ArgumentException("Invalid Story parameters");
 
-            var story = new Story(title, description);
-            var poll = new Poll();
+            var story = new Story(title, description, departament);
 
-            story.Poll = poll;
 
 
             await _context.Story.AddAsync(story);
             await _context.SaveChangesAsync();
-            return new StoryDTO(story.Id, story.Title, story.Description, story.Poll.Id);
+            return new StoryDTO(story.Id, story.Title, story.Description, story.Departament);
         }
 
         public Task<bool> Delete(int id)
@@ -52,17 +51,31 @@ namespace Stories.API.Services
 
         public IEnumerable<StoryDTO> GetAll()
         {
-            return _context.Story.Select(s => new StoryDTO(s.Id, s.Title, s.Description, s.Poll.Id)).AsEnumerable();
+            return _context.Story.Select(s => new StoryDTO(s.Id, s.Title, s.Description, s.Departament)).AsEnumerable();
         }
 
-        public Task<StoryDTO> GetById(int id)
+        public async Task<StoryDTO> GetById(int id)
         {
-            throw new NotImplementedException();
+            var story = await _context.Story.FirstOrDefaultAsync(f => f.Id == id);
+
+            if (story == default)
+                throw new InvalidOperationException($"Id: {id} not found");
+
+            return new StoryDTO(story.Id, story.Title, story.Description, story.Departament);
         }
 
-        public Task<bool> Update(int id, string title, string description)
+        public async Task Update(StoryDTO storyDto)
         {
-            throw new NotImplementedException();
+            if (!IsStoryValid(storyDto.Title, storyDto.Description, storyDto.Departament)) throw new ArgumentException("Invalid Story parameters");
+
+            var story = await _context.Story.FirstOrDefaultAsync(f => f.Id == storyDto.Id);
+
+            if (story == default) throw new InvalidOperationException($"Id: {storyDto.Id} not found");
+
+            story.Title = storyDto.Title;
+            story.Description = storyDto.Description;
+            story.Departament = storyDto.Departament;
+            await _context.SaveChangesAsync();
         }
     }
 }
