@@ -64,6 +64,10 @@ namespace Stories.API.Controllers
 
 
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(StoryViewModel), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+
         public async Task<IActionResult> Update(int id, StoryRequest storyRequest)
         {
             try
@@ -79,6 +83,16 @@ namespace Stories.API.Controllers
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!await _service.Delete(id)) return NotFound();
+
+            return Ok();
         }
     }
 }

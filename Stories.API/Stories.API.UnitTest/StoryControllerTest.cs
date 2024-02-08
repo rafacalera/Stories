@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Stories.API.Application.Models.Requests;
@@ -106,7 +107,7 @@ namespace Stories.API.UnitTest
         }
 
         [Fact]
-        public void Add_InValidStory_BadRequest()
+        public void Add_InvalidStory_BadRequest()
         {
             var mockService = new Mock<IStoryService>();
             var storyRequest = new StoryRequest("title", "", "departament");
@@ -118,6 +119,95 @@ namespace Stories.API.UnitTest
             Assert.NotNull(result);
             Assert.Equal(400, result.StatusCode);
             Assert.Equal("Invalid Story parameters", result.Value);
+        }
+
+        [Fact]
+        public void Update_ValidRequest_Ok()
+        {
+            var mockService = new Mock<IStoryService>();
+            int id = 1;
+            var storyRequest = new StoryRequest("title", "description", "departament");
+            var storyDto = new StoryDTO(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament);
+            mockService.Setup(s => s.Update(storyDto));
+            var controller = new StoriesController(mockService.Object);
+
+            var result = controller.Update(id, storyRequest).Result as OkObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(200, result.StatusCode);
+
+            var storyViewModel = result.Value as StoryViewModel;
+            Assert.NotNull(storyViewModel);
+            Assert.Equal(id, storyViewModel.Id);
+            Assert.Equal(storyRequest.Title, storyViewModel.Title);
+            Assert.Equal(storyRequest.Description, storyViewModel.Description);
+            Assert.Equal(storyRequest.Departament, storyViewModel.Departament);
+        }
+
+        [Fact]
+        public void Update_InvalidStory_BadRequest()
+        {
+            var mockService = new Mock<IStoryService>();
+            int id = 1;
+            var storyRequest = new StoryRequest("title", "description", "departament");
+            var storyDto = new StoryDTO(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament);
+
+            mockService.Setup(s => s.Update(storyDto))
+                .Throws(new ArgumentException("Invalid Story parameters"));
+
+            var controller = new StoriesController(mockService.Object);
+
+            var result = controller.Update(id, storyRequest).Result as BadRequestObjectResult;
+            Assert.NotNull(result);
+            Assert.Equal(400, result.StatusCode);
+            Assert.Equal("Invalid Story parameters", result.Value);
+
+        }
+
+        [Fact]
+        public void Update_InvalidId_NotFound()
+        {
+            var mockService = new Mock<IStoryService>();
+            int id = 2;
+            var storyRequest = new StoryRequest("title", "description", "departament");
+            var storyDto = new StoryDTO(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament);
+            mockService.Setup(s => s.Update(storyDto)).Throws(new InvalidOperationException($"Id: {storyDto.Id} not found"));
+
+            var controller = new StoriesController(mockService.Object);
+
+            var result = controller.Update(id, storyRequest).Result as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(404, result.StatusCode);
+            Assert.Equal($"Id: {storyDto.Id} not found", result.Value);
+        }
+
+        [Fact]
+        public void Delete_ValidId_Ok()
+        {
+            var mockService = new Mock<IStoryService>();
+            int id = 1;
+            mockService.Setup(s => s.Delete(id)).ReturnsAsync(true);
+            var controller = new StoriesController(mockService.Object);
+
+            var result = controller.Delete(id).Result as OkResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(200, result.StatusCode);
+        }
+
+        [Fact]
+        public void Delete_InvalidId_Ok()
+        {
+            var mockService = new Mock<IStoryService>();
+            int id = 1;
+            mockService.Setup(s => s.Delete(id)).ReturnsAsync(false);
+            var controller = new StoriesController(mockService.Object);
+
+            var result = controller.Delete(id).Result as NotFoundResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(200, result.StatusCode);
         }
     }
 }

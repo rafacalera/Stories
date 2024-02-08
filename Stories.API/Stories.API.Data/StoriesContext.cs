@@ -39,7 +39,15 @@ namespace Stories.API.Data
             modelBuilder.Entity<Vote>().ToTable("Votes");
             modelBuilder.Entity<Vote>().HasKey(e => e.Id);
             modelBuilder.Entity<Vote>().Property(e => e.UpVote).IsRequired();
-            modelBuilder.Entity<Vote>().Property(e => e.User).HasMaxLength(100).IsRequired();
+            
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Votes)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId)
+                .IsRequired();
+            modelBuilder.Entity<User>().HasKey(e => e.Id);
+            modelBuilder.Entity<User>().Property(e => e.Name).HasMaxLength(100).IsRequired();
         }
     }
 }

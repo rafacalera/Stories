@@ -21,6 +21,7 @@ C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.V
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.Data.SqlClient.dll
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.Identity.Client.dll
@@ -154,4 +155,3 @@ C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\obj\Debug\net8.0\refint\Stor
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\obj\Debug\net8.0\Stories.API.UnitTest.pdb
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\obj\Debug\net8.0\Stories.API.UnitTest.genruntimeconfig.cache
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\obj\Debug\net8.0\ref\Stories.API.UnitTest.dll
-C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll

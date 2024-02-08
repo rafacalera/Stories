@@ -44,11 +44,6 @@ namespace Stories.API.Services
             return new StoryDTO(story.Id, story.Title, story.Description, story.Departament);
         }
 
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<StoryDTO> GetAll()
         {
             return _context.Story.Select(s => new StoryDTO(s.Id, s.Title, s.Description, s.Departament)).AsEnumerable();
@@ -77,5 +72,18 @@ namespace Stories.API.Services
             story.Departament = storyDto.Departament;
             await _context.SaveChangesAsync();
         }
+
+
+        public async Task<bool> Delete(int id)
+        {
+            var story = await _context.Story.FirstOrDefaultAsync(f => f.Id == id);
+
+            if (story == default) return false;
+
+            _context.Story.Remove(story);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }
