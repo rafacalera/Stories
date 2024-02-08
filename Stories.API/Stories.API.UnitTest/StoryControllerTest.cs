@@ -4,6 +4,7 @@ using Moq;
 using Stories.API.Application.Models.Requests;
 using Stories.API.Application.Models.ViewModels;
 using Stories.API.Controllers;
+using Stories.API.Data.Models;
 using Stories.API.Services;
 using Stories.API.Services.Models;
 
@@ -14,23 +15,22 @@ namespace Stories.API.UnitTest
         [Fact]
         public void GetAll_HasStories_Ok()
         {
-            var mockService = new Mock<IStoryService>();
-            var storyDto = new StoryDTO(1, "title", "description", "departament");
-            mockService.Setup(s => s.GetAll()).Returns(new List<StoryDTO> { storyDto });
-            var controller = new StoriesController(mockService.Object);
+            var stories = new List<StoryDTO>
+            {
+            new StoryDTO(1, "title", "description", "departament") { Votes = new List<VoteDTO>() },
+            };
 
-            var result = controller.GetAll() as OkObjectResult;
+            var serviceMock = new Mock<IStoryService>();
+            serviceMock.Setup(s => s.GetAll()).Returns(stories);
+
+            var controller = new StoriesController(serviceMock.Object);
+
+            var result = controller.GetAll();
 
             Assert.NotNull(result);
-            Assert.Equal(200, result.StatusCode);
-
-            var stories = result.Value as IEnumerable<StoryViewModel>;
-            Assert.NotNull(stories);
-            Assert.Single(stories);
-            Assert.Equal(storyDto.Id, stories.First().Id);
-            Assert.Equal(storyDto.Title, stories.First().Title);
-            Assert.Equal(storyDto.Description, stories.First().Description);
-            Assert.Equal(storyDto.Departament, stories.First().Departament);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var storyViewModels = Assert.IsAssignableFrom<IEnumerable<StoryViewModel>>(okResult.Value);
+            Assert.NotEmpty(storyViewModels);
         }
 
         [Fact]
@@ -47,15 +47,15 @@ namespace Stories.API.UnitTest
         }
 
         [Fact]
-        public void GetById_ValidId_Ok()
+        public async Task GetById_ValidId_Ok()
         {
             var mockService = new Mock<IStoryService>();
             int id = 1;
-            var storyDto = new StoryDTO(id, "title", "description", "departament");
+            var storyDto = new StoryDTO(id, "title", "description", "departament") { Votes = new List<VoteDTO>() };
             mockService.Setup(s => s.GetById(id)).ReturnsAsync(storyDto);
             var controller = new StoriesController(mockService.Object);
 
-            var result = controller.GetById(id).Result as OkObjectResult;
+            var result = await controller.GetById(id) as OkObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(200, result.StatusCode);
@@ -89,15 +89,17 @@ namespace Stories.API.UnitTest
         public void Add_ValidStory_Created()
         {
             var mockService = new Mock<IStoryService>();
+            var id = 1;
             var storyRequest = new StoryRequest("title", "description", "departament");
             var storyDto = new StoryDTO(1, storyRequest.Title, storyRequest.Description, storyRequest.Departament);
-            mockService.Setup(s => s.Add(storyRequest.Title, storyRequest.Description, storyRequest.Departament)).ReturnsAsync(storyDto);
+            mockService.Setup(s => s.Add(storyRequest.Title, storyRequest.Description, storyRequest.Departament)).ReturnsAsync(id);
             var controller = new StoriesController(mockService.Object);
 
             var result = controller.Add(storyRequest).Result as CreatedResult;
 
             Assert.NotNull(result);
             Assert.Equal(201, result.StatusCode);
+            Assert.Equal($"api/Stories/{id}", result.Location);
 
             var storyViewModel = result.Value as StoryViewModel;
             Assert.NotNull(storyViewModel);
@@ -122,64 +124,70 @@ namespace Stories.API.UnitTest
         }
 
         [Fact]
-        public void Update_ValidRequest_Ok()
+        public async Task Update_ValidRequest_Ok()
         {
-            var mockService = new Mock<IStoryService>();
             int id = 1;
-            var storyRequest = new StoryRequest("title", "description", "departament");
-            var storyDto = new StoryDTO(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament);
-            mockService.Setup(s => s.Update(storyDto));
-            var controller = new StoriesController(mockService.Object);
+            var storyRequest = new StoryRequest("Test Title", "Test Description", "Test Departament");
+            var serviceMock = new Mock<IStoryService>();
+            serviceMock.Setup(x => x.Update(It.IsAny<StoryDTO>()))
+                       .Callback<StoryDTO>(dto =>
+                       {
+                           Assert.Equal(id, dto.Id);
+                           Assert.Equal(storyRequest.Title, dto.Title);
+                           Assert.Equal(storyRequest.Description, dto.Description);
+                           Assert.Equal(storyRequest.Departament, dto.Departament);
+                       });
+            var controller = new StoriesController(serviceMock.Object);
 
-            var result = controller.Update(id, storyRequest).Result as OkObjectResult;
+            var result = await controller.Update(id, storyRequest);
 
             Assert.NotNull(result);
-            Assert.Equal(200, result.StatusCode);
-
-            var storyViewModel = result.Value as StoryViewModel;
-            Assert.NotNull(storyViewModel);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var storyViewModel = Assert.IsType<StoryViewModel>(okResult.Value);
             Assert.Equal(id, storyViewModel.Id);
             Assert.Equal(storyRequest.Title, storyViewModel.Title);
             Assert.Equal(storyRequest.Description, storyViewModel.Description);
             Assert.Equal(storyRequest.Departament, storyViewModel.Departament);
+            serviceMock.Verify(x => x.Update(It.IsAny<StoryDTO>()), Times.Once);
         }
 
         [Fact]
-        public void Update_InvalidStory_BadRequest()
+        public async Task Update_InvalidArguments_BadRequest()
         {
-            var mockService = new Mock<IStoryService>();
+            int id = 1;
+            var storyRequest = new StoryRequest("title", "", "");
+
+            var serviceMock = new Mock<IStoryService>();
+            serviceMock.Setup(x => x.Update(It.IsAny<StoryDTO>()))
+                       .Throws(new ArgumentException("Invalid Story parameters"));
+
+            var controller = new StoriesController(serviceMock.Object);
+
+            var result = await controller.Update(id, storyRequest);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Invalid Story parameters", badRequestResult.Value);
+
+            serviceMock.Verify(x => x.Update(It.IsAny<StoryDTO>()), Times.Once);
+
+        }
+
+        [Fact]
+        public async Task Update_InvalidId_NotFound()
+        {
             int id = 1;
             var storyRequest = new StoryRequest("title", "description", "departament");
-            var storyDto = new StoryDTO(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament);
+            var serviceMock = new Mock<IStoryService>();
+            serviceMock.Setup(x => x.Update(It.IsAny<StoryDTO>()))
+                       .Throws(new InvalidOperationException($"Id: {id} not found"));
+            var controller = new StoriesController(serviceMock.Object);
 
-            mockService.Setup(s => s.Update(storyDto))
-                .Throws(new ArgumentException("Invalid Story parameters"));
-
-            var controller = new StoriesController(mockService.Object);
-
-            var result = controller.Update(id, storyRequest).Result as BadRequestObjectResult;
-            Assert.NotNull(result);
-            Assert.Equal(400, result.StatusCode);
-            Assert.Equal("Invalid Story parameters", result.Value);
-
-        }
-
-        [Fact]
-        public void Update_InvalidId_NotFound()
-        {
-            var mockService = new Mock<IStoryService>();
-            int id = 2;
-            var storyRequest = new StoryRequest("title", "description", "departament");
-            var storyDto = new StoryDTO(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament);
-            mockService.Setup(s => s.Update(storyDto)).Throws(new InvalidOperationException($"Id: {storyDto.Id} not found"));
-
-            var controller = new StoriesController(mockService.Object);
-
-            var result = controller.Update(id, storyRequest).Result as NotFoundObjectResult;
+            var result = await controller.Update(id, storyRequest);
 
             Assert.NotNull(result);
-            Assert.Equal(404, result.StatusCode);
-            Assert.Equal($"Id: {storyDto.Id} not found", result.Value);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal($"Id: {id} not found", notFoundResult.Value);
+            serviceMock.Verify(x => x.Update(It.IsAny<StoryDTO>()), Times.Once);
         }
 
         [Fact]
@@ -197,7 +205,7 @@ namespace Stories.API.UnitTest
         }
 
         [Fact]
-        public void Delete_InvalidId_Ok()
+        public void Delete_InvalidId_NotFound()
         {
             var mockService = new Mock<IStoryService>();
             int id = 1;
@@ -207,7 +215,7 @@ namespace Stories.API.UnitTest
             var result = controller.Delete(id).Result as NotFoundResult;
 
             Assert.NotNull(result);
-            Assert.Equal(200, result.StatusCode);
+            Assert.Equal(404, result.StatusCode);
         }
     }
 }

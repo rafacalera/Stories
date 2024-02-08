@@ -1,4 +1,5 @@
-﻿namespace Stories.API.Application.Models.ViewModels
+﻿
+namespace Stories.API.Application.Models.ViewModels
 {
     public class StoryViewModel
     {
@@ -14,5 +15,8 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public string Departament { get; set; }
+        public ICollection<VoteViewModel> Votes { get; set; }
+
+
     }
 }

@@ -26,7 +26,8 @@ namespace Stories.API.Controllers
 
             if (stories.Count() == 0) return NoContent();
 
-            return Ok(stories.Select(s => new StoryViewModel(s.Id, s.Title, s.Description, s.Departament)).AsEnumerable());
+            return Ok(stories.Select(s => new StoryViewModel(s.Id, s.Title, s.Description, s.Departament) 
+            { Votes = s.Votes.Select(s => new VoteViewModel(s.UpVote, s.UserId)).ToList() }).AsEnumerable());
         }
 
         [HttpGet("{id}")]
@@ -37,7 +38,7 @@ namespace Stories.API.Controllers
             try
             {
                 var storyDto = await _service.GetById(id);
-                return Ok(new StoryViewModel(storyDto.Id, storyDto.Title, storyDto.Description, storyDto.Departament));
+                return Ok(new StoryViewModel(storyDto.Id, storyDto.Title, storyDto.Description, storyDto.Departament) { Votes = storyDto.Votes.Select(s => new VoteViewModel(s.UpVote, s.UserId)).ToList() });
             }
             catch (InvalidOperationException ex)
             {
@@ -53,8 +54,8 @@ namespace Stories.API.Controllers
         {
             try
             {
-                var cityDto = await _service.Add(storyRequest.Title, storyRequest.Description, storyRequest.Departament);
-                return Created($"api/Stories/{cityDto.Id}", new StoryViewModel(cityDto.Id, cityDto.Title, cityDto.Description, cityDto.Departament));
+                int id = await _service.Add(storyRequest.Title, storyRequest.Description, storyRequest.Departament);
+                return Created($"api/Stories/{id}", new StoryViewModel(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament));
             }
             catch (ArgumentException ex)
             {

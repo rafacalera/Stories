@@ -8439,7 +8439,8 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Rafa\\.nuget\\packages\\": {}
+    "C:\\Users\\rafael.calera\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -8447,11 +8448,15 @@
       "projectUniqueName": "C:\\dev\\git\\Stories\\Stories.API\\Stories.API.UnitTest\\Stories.API.UnitTest.csproj",
       "projectName": "Stories.API.UnitTest",
       "projectPath": "C:\\dev\\git\\Stories\\Stories.API\\Stories.API.UnitTest\\Stories.API.UnitTest.csproj",
-      "packagesPath": "C:\\Users\\Rafa\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\rafael.calera\\.nuget\\packages\\",
       "outputPath": "C:\\dev\\git\\Stories\\Stories.API\\Stories.API.UnitTest\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Rafa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\rafael.calera\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8459,6 +8464,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

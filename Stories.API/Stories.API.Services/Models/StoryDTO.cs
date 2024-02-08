@@ -20,5 +20,6 @@ namespace Stories.API.Services.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string Departament { get; set; }
+        public ICollection<VoteDTO> Votes { get; set; }
     }
 }

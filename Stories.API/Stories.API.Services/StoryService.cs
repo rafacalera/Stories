@@ -29,7 +29,7 @@ namespace Stories.API.Services
             _context = context;
         }
 
-        public async Task<StoryDTO> Add(string title, string description, string departament)
+        public async Task<int> Add(string title, string description, string departament)
         {
 
             if (!IsStoryValid(title, description, departament))
@@ -41,22 +41,36 @@ namespace Stories.API.Services
 
             await _context.Story.AddAsync(story);
             await _context.SaveChangesAsync();
-            return new StoryDTO(story.Id, story.Title, story.Description, story.Departament);
+            return story.Id;
         }
 
         public IEnumerable<StoryDTO> GetAll()
         {
-            return _context.Story.Select(s => new StoryDTO(s.Id, s.Title, s.Description, s.Departament)).AsEnumerable();
+            return _context.Story
+                .Include(s => s.Votes)
+                .ThenInclude(x => x.User)
+                .Select(s => new StoryDTO(
+                        s.Id,
+                        s.Title,
+                        s.Description,
+                        s.Departament)
+                { Votes = s.Votes.Select(v => new VoteDTO(v.Id, v.UpVote, v.StoryId, v.UserId)).ToList() }).AsEnumerable();
         }
 
         public async Task<StoryDTO> GetById(int id)
         {
-            var story = await _context.Story.FirstOrDefaultAsync(f => f.Id == id);
+            var story = await _context.Story
+                                        .Include(s => s.Votes)
+                                        .ThenInclude(v => v.User)
+                                        .FirstOrDefaultAsync(f => f.Id == id);
 
             if (story == default)
                 throw new InvalidOperationException($"Id: {id} not found");
 
-            return new StoryDTO(story.Id, story.Title, story.Description, story.Departament);
+            return new StoryDTO(story.Id, story.Title, story.Description, story.Departament)
+            {
+                Votes = story.Votes.Select(v => new VoteDTO(v.Id, v.UpVote, v.StoryId, v.UserId)).ToList()
+            };
         }
 
         public async Task Update(StoryDTO storyDto)

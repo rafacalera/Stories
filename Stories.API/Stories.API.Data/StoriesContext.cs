@@ -14,6 +14,7 @@ namespace Stories.API.Data
         public StoriesContext(DbContextOptions<StoriesContext> options) : base(options) { }
         public DbSet<Story> Story { get; set; }
         public DbSet<Vote> Vote { get; set; }
+        public DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
