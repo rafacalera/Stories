@@ -5,7 +5,7 @@ using Stories.API.Application.Models.Requests;
 using Stories.API.Application.Models.ViewModels;
 using Stories.API.Controllers;
 using Stories.API.Data.Models;
-using Stories.API.Services;
+using Stories.API.Services.Interfaces;
 using Stories.API.Services.Models;
 
 namespace Stories.API.UnitTest

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Stories.API.Data;
 using Stories.API.Data.Models;
+using Stories.API.Services.Interfaces;
 using Stories.API.Services.Models;
 
 namespace Stories.API.Services
@@ -8,6 +9,11 @@ namespace Stories.API.Services
     public class StoryService : IStoryService
     {
         private readonly StoriesContext _context;
+
+        public StoryService(StoriesContext context)
+        {
+            _context = context;
+        }
 
         private bool IsStoryValid(string title, string description, string departament)
         {
@@ -22,11 +28,6 @@ namespace Stories.API.Services
             } 
             
             return true;
-        }
-
-        public StoryService(StoriesContext context)
-        {
-            _context = context;
         }
 
         public async Task<int> Add(string title, string description, string departament)

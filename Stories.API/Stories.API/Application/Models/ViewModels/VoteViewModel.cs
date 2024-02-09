@@ -10,5 +10,6 @@
 
         public bool UpVote { get; set; }
         public int UserId { get; set; }
+
     }
 }

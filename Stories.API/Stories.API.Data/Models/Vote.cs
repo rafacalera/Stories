@@ -8,9 +8,11 @@ namespace Stories.API.Data.Models
 {
     public class Vote
     {
-        public Vote(bool upVote)
+        public Vote(bool upVote, int storyId, int userId)
         {
             UpVote = upVote;
+            StoryId = storyId;
+            UserId = userId;
         }
 
         public int Id { get; private set; }

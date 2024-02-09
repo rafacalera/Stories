@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Stories.API.Data;
 using Stories.API.Services;
+using Stories.API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IStoryService, StoryService>();
+builder.Services.AddScoped<IVoteService, VoteService>();
 
 var app = builder.Build();
 

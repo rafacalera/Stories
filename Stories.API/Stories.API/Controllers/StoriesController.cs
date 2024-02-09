@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Stories.API.Services;
 using Stories.API.Application.Models.ViewModels;
 using Stories.API.Application.Models.Requests;
 using Stories.API.Services.Models;
+using Stories.API.Services.Interfaces;
 
 namespace Stories.API.Controllers
 {
