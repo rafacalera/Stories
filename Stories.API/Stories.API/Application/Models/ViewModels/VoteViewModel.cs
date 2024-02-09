@@ -2,12 +2,14 @@
 {
     public class VoteViewModel
     {
-        public VoteViewModel(bool upVote, int userId)
+        public VoteViewModel(int id, bool upVote, int userId)
         {
+            Id = id;
             UpVote = upVote;
             UserId = userId;
         }
 
+        public int Id { get; set; }
         public bool UpVote { get; set; }
         public int UserId { get; set; }
 

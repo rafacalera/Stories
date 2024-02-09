@@ -43,9 +43,17 @@ namespace Stories.API.Services
             return true;
         }
 
-        public Task<bool> Delete(int userId, int storyId)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            var vote = await _context.Vote.FirstOrDefaultAsync(f => f.Id == id);
+
+            if (vote == default)
+                return false;
+
+            _context.Vote.Remove(vote);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

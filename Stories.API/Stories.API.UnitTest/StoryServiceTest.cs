@@ -28,7 +28,7 @@ namespace Stories.API.UnitTest
 
 
         [Fact]
-        public async Task Add_ValidParameters_StoryDTO()
+        public async Task Add_ValidParameters_Int()
         {
             var service = new StoryService(_context);
             var title = "title";

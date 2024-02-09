@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Stories.API.Services")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da25edb4b481a66f397382694e9cdd096324e79d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00c85d5d905af78bc19b3ce3e59db2fb8e706be4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Stories.API.Services")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Stories.API.Services")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

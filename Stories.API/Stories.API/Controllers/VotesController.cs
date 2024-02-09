@@ -15,6 +15,8 @@ namespace Stories.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Add(VoteRequest voteRequest)
         {
             bool result = await _service.Add(voteRequest.UpVote, voteRequest.StoryId, voteRequest.UserId);
@@ -22,7 +24,20 @@ namespace Stories.API.Controllers
             if (!result)
                 return BadRequest();
 
-            return Ok(voteRequest);
+            return Created();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool result = await _service.Delete(id);
+
+            if (!result)
+                return NotFound();
+
+            return Ok();
         }
     }
 }

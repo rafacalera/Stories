@@ -9,6 +9,6 @@ namespace Stories.API.Services.Interfaces
     public interface IVoteService
     {
         Task<bool> Add(bool upVote, int storyId, int userId);
-        Task<bool> Delete(int userId, int storyId);
+        Task<bool> Delete(int id);
     }
 }

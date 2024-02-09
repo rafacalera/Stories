@@ -27,7 +27,7 @@ namespace Stories.API.Controllers
             if (stories.Count() == 0) return NoContent();
 
             return Ok(stories.Select(s => new StoryViewModel(s.Id, s.Title, s.Description, s.Departament) 
-            { Votes = s.Votes.Select(s => new VoteViewModel(s.UpVote, s.UserId)).ToList() }).AsEnumerable());
+            { Votes = s.Votes.Select(s => new VoteViewModel(s.Id, s.UpVote, s.UserId)).ToList() }).AsEnumerable());
         }
 
         [HttpGet("{id}")]
@@ -38,7 +38,7 @@ namespace Stories.API.Controllers
             try
             {
                 var storyDto = await _service.GetById(id);
-                return Ok(new StoryViewModel(storyDto.Id, storyDto.Title, storyDto.Description, storyDto.Departament) { Votes = storyDto.Votes.Select(s => new VoteViewModel(s.UpVote, s.UserId)).ToList() });
+                return Ok(new StoryViewModel(storyDto.Id, storyDto.Title, storyDto.Description, storyDto.Departament) { Votes = storyDto.Votes.Select(s => new VoteViewModel(s.Id, s.UpVote, s.UserId)).ToList() });
             }
             catch (InvalidOperationException ex)
             {
