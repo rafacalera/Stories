@@ -15,16 +15,16 @@ namespace Stories.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(201)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Add(VoteRequest voteRequest)
         {
             bool result = await _service.Add(voteRequest.UpVote, voteRequest.StoryId, voteRequest.UserId);
 
-            if (!result)
+            if (result == false)
                 return BadRequest();
 
-            return Created();
+            return Ok();
         }
 
         [HttpDelete("{id}")]

@@ -1,0 +1,32 @@
+<header>
+  <nav>
+    <mat-form-field class="example-full-width">
+      <mat-label>Vote as User Id</mat-label>
+      <input matInput placeholder="Ex. 1" />
+    </mat-form-field>
+    <button
+      mat-mini-fab
+      color="primary"
+      aria-label="Example icon button with a menu icon"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </nav>
+</header>
+<main>
+  <app-card
+    class="card"
+    *ngFor="let story of stories"
+    [story]="story"
+    (deleteEvent)="handleDeleteEvent(story.id)"
+    (openUpdateFormEvent)="handleOpenUpdateFormEvent(story)"
+  />
+
+  <app-form
+    class="form"
+    *ngIf="editMode"
+    [story]="editStory"
+    (closeFormEvent)="handleCloseFormEvent()"
+    (storyUpdatedFormEvent)="handleStoryUpdatedFormEvent($event)"
+  ></app-form>
+</main>

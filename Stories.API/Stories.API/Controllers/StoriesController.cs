@@ -19,7 +19,7 @@ namespace Stories.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<StoryViewModel>), 200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
         public IActionResult GetAll()
         {
             var stories = _service.GetAll();

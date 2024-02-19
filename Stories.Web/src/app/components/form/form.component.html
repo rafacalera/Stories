@@ -1,0 +1,54 @@
+<section>
+  <div class="header">
+    <h1>Editing Story of Id: {{ story.id }}</h1>
+    <button
+      mat-icon-button
+      color="warn"
+      aria-label="Example icon button with a heart icon"
+      (click)="handleClose()"
+    >
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <form class="form">
+    <mat-form-field class="full-width">
+      <mat-label>Title</mat-label>
+      <input
+        type="text"
+        maxlength="80"
+        [(ngModel)]="story.title"
+        name="title"
+        placeholder="Ex. History About a..."
+        matInput
+      />
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea
+        type="textarea"
+        maxlength="250"
+        [(ngModel)]="story.description"
+        name="description"
+        placeholder="Ex. Me, as a customer..."
+        matInput
+      ></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Departament</mat-label>
+      <input
+        type="text"
+        maxlength="50"
+        [(ngModel)]="story.departament"
+        name="departament"
+        placeholder="Ex. Human Resources"
+        matInput
+      />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="handleUpdate($event)">
+      Update
+    </button>
+  </form>
+</section>

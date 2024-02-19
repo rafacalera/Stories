@@ -1,0 +1,33 @@
+<mat-card class="card">
+  <mat-card-header>
+    <mat-card-title>{{ story.title }}</mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content class="content">
+    <p>{{ story.description }}</p>
+    <mat-card-subtitle>
+      {{ story.departament }}
+    </mat-card-subtitle>
+  </mat-card-content>
+  <mat-card-footer>
+    <mat-card-subtitle> </mat-card-subtitle>
+  </mat-card-footer>
+  <mat-card-actions class="actions">
+    <div>
+      <button mat-icon-button>
+        <mat-icon>thumb_up</mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon>thumb_down</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button mat-icon-button (click)="handleEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="handleDelete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>
