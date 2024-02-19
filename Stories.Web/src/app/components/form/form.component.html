@@ -1,6 +1,7 @@
 <section>
   <div class="header">
-    <h1>Editing Story of Id: {{ story.id }}</h1>
+    <h1 *ngIf="!editMode">Add a new story</h1>
+    <h1 *ngIf="editMode">Editing Story of Id: {{ story.id }}</h1>
     <button
       mat-icon-button
       color="warn"
@@ -47,8 +48,22 @@
       />
     </mat-form-field>
 
-    <button mat-raised-button color="primary" (click)="handleUpdate($event)">
+    <button
+      *ngIf="editMode"
+      mat-raised-button
+      color="primary"
+      (click)="handleUpdate($event)"
+    >
       Update
+    </button>
+
+    <button
+      *ngIf="!editMode"
+      mat-raised-button
+      color="primary"
+      (click)="handleAdd($event)"
+    >
+      Add
     </button>
   </form>
 </section>

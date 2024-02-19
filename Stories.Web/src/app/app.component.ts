@@ -9,10 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   title = 'Stories of Product Owner';
-  editStory!: Story;
+  editStory: Story = new Story(1, '', '', '', []);
   stories!: Array<Story>;
   editMode: boolean = false;
-  addMode: boolean = false;
+  openForm: boolean = false;
 
   constructor(private _storyService: StoryService) {}
 
@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
 
   handleOpenUpdateFormEvent = (story: Story) => {
     this.editMode = true;
+    this.openForm = true;
     this.editStory = new Story(
       story.id,
       story.title,
@@ -42,12 +43,23 @@ export class AppComponent implements OnInit {
   };
 
   handleCloseFormEvent = (): void => {
-    this.editMode = false;
+    this.openForm = false;
+
+    this.editStory = new Story(1, '', '', '', []);
   };
 
   handleStoryUpdatedFormEvent = (updatedStory: Story): void => {
     let i: number = this.stories.findIndex((e) => e.id == updatedStory.id);
 
     this.stories[i] = updatedStory;
+  };
+
+  handleAdd = (): void => {
+    this.editMode = false;
+    this.openForm = true;
+  };
+
+  handleStoryAddedFormEvent = (addedStory: Story): void => {
+    this.stories.push(addedStory);
   };
 }

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -18,27 +19,41 @@ import { StoryService } from '../../services/story/story.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    CommonModule,
   ],
 })
 export class FormComponent {
+  @Input() editMode!: boolean;
   @Input() story!: Story;
   @Output() closeFormEvent = new EventEmitter();
   @Output() storyUpdatedFormEvent = new EventEmitter();
+  @Output() storyAddedFormEvent = new EventEmitter();
 
   constructor(private _storyService: StoryService) {}
 
-  handleClose() {
+  handleClose = (): void => {
     this.closeFormEvent.emit('Closing window');
-  }
+  };
 
-  handleUpdate(event: Event) {
+  handleUpdate = (event: Event): void => {
     event.preventDefault();
 
     this._storyService.update(this.story).subscribe((data) => {
-      console.log(data);
+      this.storyUpdatedFormEvent.emit(this.story);
+      this.handleClose();
     });
+  };
 
-    this.storyUpdatedFormEvent.emit(this.story);
-    this.handleClose();
-  }
+  handleAdd = (event: Event): void => {
+    event.preventDefault();
+
+    this._storyService
+      .add(this.story.title, this.story.description, this.story.departament)
+      .subscribe((data) => {
+        this.storyAddedFormEvent.emit(
+          new Story(data.id, data.title, data.description, data.departament, [])
+        );
+        this.handleClose();
+      });
+  };
 }

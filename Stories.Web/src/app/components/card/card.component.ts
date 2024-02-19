@@ -23,9 +23,8 @@ export class CardComponent {
 
   handleDelete = (): void => {
     this._storyService.delete(this.story.id).subscribe((data) => {
-      console.log(data);
+      this.deleteEvent.emit(`story of id "${this.story.id}" deleted`);
     });
-    this.deleteEvent.emit(`story of id "${this.story.id}" deleted`);
   };
 
   handleEdit = (): void => {
