@@ -1,8 +1,13 @@
 <header>
   <nav>
     <mat-form-field class="example-full-width">
-      <mat-label>Vote as User Id</mat-label>
-      <input matInput placeholder="Ex. 1" />
+      <mat-label>Vote as</mat-label>
+      <mat-select [(ngModel)]="userId">
+        <mat-option value="1002">John</mat-option>
+        <mat-option value="1003">Alice</mat-option>
+        <mat-option value="1004">Bob</mat-option>
+        <mat-option value="1005">Eve</mat-option>
+      </mat-select>
     </mat-form-field>
     <button
       mat-mini-fab
@@ -19,8 +24,9 @@
     class="card"
     *ngFor="let story of stories"
     [story]="story"
-    (deleteEvent)="handleDeleteEvent(story.id)"
-    (openUpdateFormEvent)="handleOpenUpdateFormEvent(story)"
+    (storyDeleted)="onStoryDeleted(story.id)"
+    (openUpdateForm)="onOpenUpdateForm(story)"
+    (newVote)="onNewVote($event, story.id)"
   />
 
   <app-form
@@ -28,8 +34,8 @@
     *ngIf="openForm"
     [story]="editStory"
     [editMode]="editMode"
-    (closeFormEvent)="handleCloseFormEvent()"
-    (storyUpdatedFormEvent)="handleStoryUpdatedFormEvent($event)"
-    (storyAddedFormEvent)="handleStoryAddedFormEvent($event)"
+    (closeForm)="onCloseForm()"
+    (storyUpdated)="onStoryUpdated($event)"
+    (storyAdded)="onStoryAdded($event)"
   ></app-form>
 </main>

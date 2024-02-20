@@ -25,21 +25,21 @@ import { StoryService } from '../../services/story/story.service';
 export class FormComponent {
   @Input() editMode!: boolean;
   @Input() story!: Story;
-  @Output() closeFormEvent = new EventEmitter();
-  @Output() storyUpdatedFormEvent = new EventEmitter();
-  @Output() storyAddedFormEvent = new EventEmitter();
+  @Output() closeForm = new EventEmitter();
+  @Output() storyUpdated = new EventEmitter();
+  @Output() storyAdded = new EventEmitter();
 
   constructor(private _storyService: StoryService) {}
 
   handleClose = (): void => {
-    this.closeFormEvent.emit('Closing window');
+    this.closeForm.emit('Closing window');
   };
 
   handleUpdate = (event: Event): void => {
     event.preventDefault();
 
     this._storyService.update(this.story).subscribe((data) => {
-      this.storyUpdatedFormEvent.emit(this.story);
+      this.storyUpdated.emit(this.story);
       this.handleClose();
     });
   };
@@ -50,7 +50,7 @@ export class FormComponent {
     this._storyService
       .add(this.story.title, this.story.description, this.story.departament)
       .subscribe((data) => {
-        this.storyAddedFormEvent.emit(
+        this.storyAdded.emit(
           new Story(data.id, data.title, data.description, data.departament, [])
         );
         this.handleClose();

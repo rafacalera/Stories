@@ -7,7 +7,7 @@ import { Story } from '../../models/Story';
   providedIn: 'root',
 })
 export class StoryService {
-  apiRoute: string = 'http://localhost:5119/api/Stories';
+  private apiRoute: string = 'http://localhost:5119/api/Stories';
 
   constructor(private http: HttpClient) {}
 
