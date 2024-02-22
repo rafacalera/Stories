@@ -82,10 +82,6 @@ export class AppComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          // let i: number = this.stories.findIndex((e) => e.id == storyId);
-
-          // this.stories[i].votes.push(new Vote(1, upVote, this.userId));
-
           return alert(`Vote registred succefully!`);
         },
         error: (error) => {

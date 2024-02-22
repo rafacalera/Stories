@@ -38,9 +38,16 @@ export class FormComponent {
   handleUpdate = (event: Event): void => {
     event.preventDefault();
 
-    this._storyService.update(this.story).subscribe((data) => {
-      this.storyUpdated.emit(this.story);
-      this.handleClose();
+    this._storyService.update(this.story).subscribe({
+      next: (data) => {
+        this.storyUpdated.emit(this.story);
+
+        this.handleClose();
+      },
+      error: (error) => {
+        if (error.status === 400) return alert(`Fill in the fields correctly`);
+        return alert(`Communication error\n try again later`);
+      },
     });
   };
 
@@ -49,11 +56,25 @@ export class FormComponent {
 
     this._storyService
       .add(this.story.title, this.story.description, this.story.departament)
-      .subscribe((data) => {
-        this.storyAdded.emit(
-          new Story(data.id, data.title, data.description, data.departament, [])
-        );
-        this.handleClose();
+      .subscribe({
+        next: (data) => {
+          this.storyAdded.emit(
+            new Story(
+              data.id,
+              data.title,
+              data.description,
+              data.departament,
+              []
+            )
+          );
+
+          this.handleClose();
+        },
+        error: (error) => {
+          if (error.status === 400)
+            return alert(`Fill in the fields correctly`);
+          return alert(`Communication error\n try again later`);
+        },
       });
   };
 }

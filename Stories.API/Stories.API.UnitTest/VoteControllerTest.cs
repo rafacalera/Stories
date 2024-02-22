@@ -21,10 +21,10 @@ namespace Stories.API.UnitTest
             service.Setup(s => s.Add(It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
             var controller = new VotesController(service.Object);
 
-            var result = await controller.Add(voteRequest) as CreatedResult;
+            var result = await controller.Add(voteRequest) as OkResult;
 
             Assert.NotNull(result);
-            Assert.IsType<CreatedResult>(result);
+            Assert.IsType<OkResult>(result);
         }
 
         [Fact]

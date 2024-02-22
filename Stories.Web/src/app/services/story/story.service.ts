@@ -12,13 +12,9 @@ export class StoryService {
   constructor(private http: HttpClient) {}
 
   differenceOfVotes = (story: Story): number => {
-    const upvotes = story.votes.filter((voto) => voto.upVote).length;
-    const downvotes = story.votes.length - upvotes;
-    return upvotes - downvotes;
-  };
-
-  getById = (id: number): Observable<any> => {
-    return this.http.get(`${this.apiRoute}/${id}`);
+    const upVotes = story.votes.filter((voto) => voto.upVote).length;
+    const downVotes = story.votes.length - upVotes;
+    return upVotes - downVotes;
   };
 
   getAll = (): Observable<any> => {

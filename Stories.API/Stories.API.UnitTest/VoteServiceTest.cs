@@ -17,16 +17,16 @@ namespace Stories.API.UnitTest
 {
     public class VoteServiceTest 
     {
-        private readonly StoriesContext _context;
+        //private readonly StoriesContext _context;
 
-        public VoteServiceTest()
-        {
-            DbContextOptions<StoriesContext> options = new DbContextOptionsBuilder<StoriesContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
+        //public VoteServiceTest()
+        //{
+        //    DbContextOptions<StoriesContext> options = new DbContextOptionsBuilder<StoriesContext>()
+        //        .UseInMemoryDatabase(Guid.NewGuid().ToString())
+        //        .Options;
 
-            _context = new StoriesContext(options);
-        }
+        //    _context = new StoriesContext(options);
+        //}
 
         //[Fact]
         //public async Task Add_ValidVote_True()

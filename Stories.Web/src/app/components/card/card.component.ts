@@ -6,7 +6,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Story } from '../../models/Story';
 import { StoryService } from '../../services/story/story.service';
-import { VoteService } from '../../services/vote/vote.service';
 
 @Component({
   selector: 'app-card',

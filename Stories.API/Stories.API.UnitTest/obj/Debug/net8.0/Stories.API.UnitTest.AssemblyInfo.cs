@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Stories.API.UnitTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00c85d5d905af78bc19b3ce3e59db2fb8e706be4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+79dce2f5644b823004b75cc540a0ed934a4ae31a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Stories.API.UnitTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Stories.API.UnitTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

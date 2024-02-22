@@ -5,13 +5,8 @@
   <mat-divider></mat-divider>
   <mat-card-content class="content">
     <p>{{ story.description }}</p>
-    <mat-card-subtitle>
-      {{ story.departament }}
-    </mat-card-subtitle>
+    <mat-card-subtitle>{{ story.departament }}</mat-card-subtitle>
   </mat-card-content>
-  <mat-card-footer>
-    <mat-card-subtitle> </mat-card-subtitle>
-  </mat-card-footer>
   <mat-card-actions class="actions">
     <div>
       <button mat-icon-button (click)="handleVote(true)">
