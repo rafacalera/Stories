@@ -26,25 +26,6 @@ namespace Stories.API.UnitTest
         //        .Options;
 
         //    _context = new StoriesContext(options);
-        //}
-
-        //[Fact]
-        //public async Task Add_ValidVote_True()
-        //{
-        //    var service = new VoteService(_context);
-        //    bool upVote = true;
-        //    int storyId = 1;
-        //    int userId = 1;
-
-        //    bool result = await service.Add(upVote, storyId, userId);
-
-        //    IEnumerable<Vote> votes = _context.Vote.AsEnumerable();
-        //    Assert.NotNull(votes.First());
-        //    Assert.Equal(upVote, votes.First().UpVote);
-        //    Assert.Equal(storyId, votes.First().StoryId);
-        //    Assert.Equal(userId, votes.First().UserId);
-        //}
-
-      
+        //}      
     }
 }

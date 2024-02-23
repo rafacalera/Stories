@@ -82,12 +82,12 @@ export class AppComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          return alert(`Vote registred succefully!`);
+          return alert('Vote registred succefully!');
         },
         error: (error) => {
           if (error.status === 400)
-            return alert(`This user already voted in this story!`);
-          return alert(`Communication error\n try again later`);
+            return alert('This user already voted in this story!');
+          return alert('Communication error\n try again later');
         },
       });
   };

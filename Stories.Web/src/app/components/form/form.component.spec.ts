@@ -12,6 +12,10 @@ describe('FormComponent', () => {
   let component: FormComponent;
   let fixture: ComponentFixture<FormComponent>;
   let mockStoryService: jasmine.SpyObj<StoryService>;
+  let mockEvent: Event = new Event('click', {
+    bubbles: true,
+    cancelable: true,
+  });
 
   beforeEach(async () => {
     mockStoryService = jasmine.createSpyObj('StoryService', ['update', 'add']);
@@ -122,9 +126,7 @@ describe('FormComponent', () => {
 
     mockStoryService.update.and.returnValue(of(component.story));
 
-    component.handleUpdate(
-      new Event('click', { bubbles: true, cancelable: true })
-    );
+    component.handleUpdate(mockEvent);
 
     expect(mockStoryService.update).toHaveBeenCalledWith(component.story);
     expect(component.storyUpdated.emit).toHaveBeenCalledWith(component.story);
@@ -137,9 +139,7 @@ describe('FormComponent', () => {
 
     mockStoryService.update.and.returnValue(throwError(() => error));
 
-    component.handleUpdate(
-      new Event('click', { bubbles: true, cancelable: true })
-    );
+    component.handleUpdate(mockEvent);
 
     expect(window.alert).toHaveBeenCalledWith(`Fill in the fields correctly`);
   });
@@ -150,9 +150,48 @@ describe('FormComponent', () => {
 
     mockStoryService.update.and.returnValue(throwError(() => error));
 
-    component.handleUpdate(
-      new Event('click', { bubbles: true, cancelable: true })
+    component.handleUpdate(mockEvent);
+
+    expect(window.alert).toHaveBeenCalledWith(
+      `Communication error\n try again later`
     );
+  });
+
+  it('should emit storyAdded event on handleAdd', () => {
+    spyOn(component.storyAdded, 'emit');
+    spyOn(component, 'handleClose');
+
+    mockStoryService.add.and.returnValue(of(component.story));
+
+    component.handleAdd(mockEvent);
+
+    expect(mockStoryService.add).toHaveBeenCalledWith(
+      component.story.title,
+      component.story.description,
+      component.story.departament
+    );
+    expect(component.storyAdded.emit).toHaveBeenCalledWith(component.story);
+    expect(component.handleClose).toHaveBeenCalled();
+  });
+
+  it('should handle error 400 on handleAdd', () => {
+    spyOn(window, 'alert');
+    const error = { status: 400 };
+
+    mockStoryService.add.and.returnValue(throwError(() => error));
+
+    component.handleAdd(mockEvent);
+
+    expect(window.alert).toHaveBeenCalledWith(`Fill in the fields correctly`);
+  });
+
+  it('should handle other errors on handleAdd', () => {
+    spyOn(window, 'alert');
+    const error = { status: 500 };
+
+    mockStoryService.add.and.returnValue(throwError(() => error));
+
+    component.handleAdd(mockEvent);
 
     expect(window.alert).toHaveBeenCalledWith(
       `Communication error\n try again later`
