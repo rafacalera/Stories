@@ -82,7 +82,8 @@ export class AppComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          return alert('Vote registred succefully!');
+          alert('Vote registred succefully!');
+          return this.ngOnInit();
         },
         error: (error) => {
           if (error.status === 400)
