@@ -7,6 +7,8 @@ using Stories.API.Controllers;
 using Stories.API.Data.Models;
 using Stories.API.Services.Interfaces;
 using Stories.API.Services.Models;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Stories.API.UnitTest
 {
@@ -216,6 +218,74 @@ namespace Stories.API.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(404, result.StatusCode);
+        }
+
+        [Fact]
+        public void Vote_ValidRequest_Ok()
+        {
+            var mockService = new Mock<IStoryService>();
+            int id = 1;
+            int storyId = 1;
+            bool upVote = true;
+            int userId = 1;
+
+            mockService.Setup(s => s.Vote(upVote, storyId, userId)).ReturnsAsync(id);
+
+            var controller = new StoriesController(mockService.Object);
+
+            var result = controller.Vote(storyId, new VoteRequest(upVote, userId)).Result as OkObjectResult;
+            Assert.NotNull(result);
+
+            var voteViewModel = result.Value as VoteViewModel;
+
+            Assert.Equal(200, result.StatusCode);
+            Assert.IsType<VoteViewModel>(voteViewModel);
+            Assert.Equal(id, voteViewModel.Id);
+        }
+
+        [Theory]
+        [InlineData("User doesn't exists")]
+        [InlineData("User already vote")] 
+        public void Vote_InvalidArguments_BadRequest(string errorMessage)
+        {
+            var mockService = new Mock<IStoryService>();
+
+            int id = 1;
+            int storyId = 1;
+            bool upVote = true;
+            int userId = 10000;
+
+
+            mockService.Setup(s => s.Vote(upVote, storyId, userId)).Throws(new ArgumentException(errorMessage));
+
+            var controller = new StoriesController(mockService.Object);
+
+            var result = controller.Vote(storyId, new VoteRequest(upVote, userId)).Result as BadRequestObjectResult;
+            Assert.NotNull(result);
+
+            Assert.Equal(400, result.StatusCode);
+            Assert.Equal(errorMessage, result.Value);
+        }
+
+        [Fact]
+        public void Vote_InvalidStoryId_NotFound()
+        {
+            var mockService = new Mock<IStoryService>();
+            int id = 1;
+            int storyId = 0;
+            bool upVote = true;
+            int userId = 1;
+            string errorMessage = "Story doesn't exists";
+
+            mockService.Setup(s => s.Vote(upVote, storyId, userId)).Throws(new InvalidOperationException(errorMessage));
+
+            var controller = new StoriesController(mockService.Object);
+
+            var result = controller.Vote(storyId, new VoteRequest(upVote, userId)).Result as NotFoundObjectResult;
+            Assert.NotNull(result);
+
+            Assert.Equal(404, result.StatusCode);
+            Assert.Equal(errorMessage, result.Value);
         }
     }
 }

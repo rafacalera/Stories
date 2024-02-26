@@ -15,6 +15,19 @@ namespace Stories.API.Services
             _context = context;
         }
 
+        private async Task ValidVote(int storyId, int userId)
+        {
+            if (await _context.Story.FirstOrDefaultAsync(f => f.Id == storyId) == default)
+                throw new InvalidOperationException("Story doesn't exists");
+
+            if (await _context.User.FirstOrDefaultAsync(f => f.Id == userId) == default)
+                throw new ArgumentException("User doesn't exists");
+
+            if (await _context.Vote.FirstOrDefaultAsync(f => f.UserId == userId && f.StoryId == storyId) != default)
+                throw new ArgumentException("User already vote");
+        }
+
+
         private bool IsStoryValid(string title, string description, string departament)
         {
             if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description) || string.IsNullOrWhiteSpace(departament))
@@ -100,5 +113,16 @@ namespace Stories.API.Services
             return true;
         }
 
+
+        public async Task<int> Vote(bool upVote, int storyId, int userId)
+        {
+            await ValidVote(storyId, userId);
+
+            var vote = new Vote(upVote, storyId, userId);
+
+            await _context.Vote.AddAsync(vote);
+            await _context.SaveChangesAsync();
+            return vote.Id;
+        }
     }
 }

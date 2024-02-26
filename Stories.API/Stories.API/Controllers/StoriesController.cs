@@ -95,5 +95,27 @@ namespace Stories.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{id}/Vote")]
+        [ProducesResponseType(typeof(VoteViewModel), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Vote(int id, VoteRequest voteRequest)
+        {
+            try
+            {
+                int voteId = await _service.Vote(voteRequest.UpVote, id, voteRequest.UserId);
+
+                return Ok(new VoteViewModel(voteId, voteRequest.UpVote, voteRequest.UserId));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch(InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

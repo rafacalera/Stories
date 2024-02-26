@@ -14,5 +14,6 @@ namespace Stories.API.Services.Interfaces
         Task<int> Add(string title, string description, string departament);
         Task Update(StoryDTO storyDto);
         Task<bool> Delete(int id);
+        Task<int> Vote(bool upVote, int storyId, int userId);
     }
 }
