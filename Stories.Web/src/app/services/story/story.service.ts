@@ -14,7 +14,11 @@ export class StoryService {
   differenceOfVotes = (story: Story): number => {
     const upVotes = story.votes.filter((voto) => voto.upVote).length;
     const downVotes = story.votes.length - upVotes;
-    return upVotes - downVotes;
+
+    const weightedUpVotes = upVotes * 1;
+    const weightedDownVotes = downVotes * -1;
+
+    return weightedUpVotes + weightedDownVotes;
   };
 
   getAll = (): Observable<any> => {
@@ -42,6 +46,17 @@ export class StoryService {
       title: story.title,
       description: story.description,
       departament: story.departament,
+    });
+  };
+
+  vote = (
+    storyId: number,
+    userId: number,
+    upVote: boolean
+  ): Observable<any> => {
+    return this.http.post(`${this.apiRoute}/${storyId}/Vote`, {
+      userId,
+      upVote,
     });
   };
 }

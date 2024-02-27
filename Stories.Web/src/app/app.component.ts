@@ -1,8 +1,7 @@
 import { Story } from './models/Story';
 import { StoryService } from './services/story/story.service';
 import { Component, OnInit } from '@angular/core';
-import { VoteService } from './services/vote/vote.service';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Vote } from './models/Vote';
 
 @Component({
@@ -18,20 +17,22 @@ export class AppComponent implements OnInit {
   editMode: boolean = false;
   openForm: boolean = false;
 
-  constructor(
-    private _storyService: StoryService,
-    private _voteService: VoteService
-  ) {}
+  constructor(private _storyService: StoryService) {}
 
   ngOnInit() {
     this._storyService.getAll().subscribe((data: Array<any>) => {
-      this.stories = data.sort(
-        (a, b) =>
-          this._storyService.differenceOfVotes(b) -
-          this._storyService.differenceOfVotes(a)
-      );
+      this.stories = data;
+      this.orderByVote(this.stories);
     });
   }
+
+  orderByVote = (storyArray: Story[]) => {
+    storyArray.sort(
+      (a, b) =>
+        this._storyService.differenceOfVotes(b) -
+        this._storyService.differenceOfVotes(a)
+    );
+  };
 
   handleAdd = (): void => {
     this.editMode = false;
@@ -74,22 +75,29 @@ export class AppComponent implements OnInit {
     if (this.userId == null || undefined)
       return alert('An User is required to vote!');
 
-    this._voteService
-      .add({
-        storyId: storyId,
-        userId: this.userId,
-        upVote: upVote,
-      })
-      .subscribe({
-        next: () => {
-          alert('Vote registred succefully!');
-          return this.ngOnInit();
-        },
-        error: (error) => {
-          if (error.status === 400)
+    this._storyService.vote(storyId, this.userId, upVote).subscribe({
+      next: (vote: Vote) => {
+        let i: number = this.stories.findIndex((e) => e.id == storyId);
+        this.stories[i].votes.push(vote);
+
+        this.orderByVote(this.stories);
+
+        return alert('Vote registred succefully!');
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          if (error.error.includes('User already vote')) {
             return alert('This user already voted in this story!');
-          return alert('Communication error\n try again later');
-        },
-      });
+          }
+          return alert("User doesn't exists");
+        }
+
+        if (error.status === 404) {
+          return alert("Story doesn't exists");
+        }
+
+        return alert('Communication error\n try again later');
+      },
+    });
   };
 }
