@@ -139,3 +139,5 @@ C:\dev\git\Stories\Stories.API\Stories.API\obj\Debug\net8.0\refint\Stories.API.d
 C:\dev\git\Stories\Stories.API\Stories.API\obj\Debug\net8.0\Stories.API.pdb
 C:\dev\git\Stories\Stories.API\Stories.API\obj\Debug\net8.0\Stories.API.genruntimeconfig.cache
 C:\dev\git\Stories\Stories.API\Stories.API\obj\Debug\net8.0\ref\Stories.API.dll
+C:\dev\git\Stories\Stories.API\Stories.API\bin\Debug\net8.0\MediatR.dll
+C:\dev\git\Stories\Stories.API\Stories.API\bin\Debug\net8.0\MediatR.Contracts.dll

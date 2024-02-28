@@ -76,9 +76,9 @@ export class AppComponent implements OnInit {
       return alert('An User is required to vote!');
 
     this._storyService.vote(storyId, this.userId, upVote).subscribe({
-      next: (vote: Vote) => {
+      next: () => {
         let i: number = this.stories.findIndex((e) => e.id == storyId);
-        this.stories[i].votes.push(vote);
+        this.stories[i].votes.push(new Vote(0, upVote, this.userId));
 
         this.orderByVote(this.stories);
 

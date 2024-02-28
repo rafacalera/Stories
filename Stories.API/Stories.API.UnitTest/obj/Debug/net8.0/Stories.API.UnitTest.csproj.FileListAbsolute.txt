@@ -155,3 +155,5 @@ C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\obj\Debug\net8.0\refint\Stor
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\obj\Debug\net8.0\Stories.API.UnitTest.pdb
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\obj\Debug\net8.0\Stories.API.UnitTest.genruntimeconfig.cache
 C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\obj\Debug\net8.0\ref\Stories.API.UnitTest.dll
+C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\MediatR.dll
+C:\dev\git\Stories\Stories.API\Stories.API.UnitTest\bin\Debug\net8.0\MediatR.Contracts.dll

@@ -3,6 +3,10 @@ using Stories.API.Application.Models.ViewModels;
 using Stories.API.Application.Models.Requests;
 using Stories.API.Services.Models;
 using Stories.API.Services.Interfaces;
+using Stories.API.Application.Commands.Requests;
+using MediatR;
+using Stories.API.Application.Queries.Requests;
+using Stories.API.Application.Queries.Responses;
 
 namespace Stories.API.Controllers
 {
@@ -18,104 +22,93 @@ namespace Stories.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<StoryViewModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<FindStoryResponse>), 200)]
         [ProducesResponseType(204)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll([FromServices] IMediator mediator)
         {
-            var stories = _service.GetAll();
+            var response = await mediator.Send(new FindAllStoriesRequest());
 
-            if (stories.Count() == 0) return NoContent();
+            if (response.Count == 0)
+                return NoContent();
 
-            return Ok(stories.Select(s => new StoryViewModel(s.Id, s.Title, s.Description, s.Departament) 
-            { Votes = s.Votes.Select(s => new VoteViewModel(s.Id, s.UpVote, s.UserId)).ToList() }).AsEnumerable());
+            return Ok(response.AsEnumerable());
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(StoryViewModel), 200)]
+        [ProducesResponseType(typeof(FindStoryResponse), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromServices] IMediator mediator, int id)
         {
-            try
-            {
-                var storyDto = await _service.GetById(id);
-                return Ok(new StoryViewModel(storyDto.Id, storyDto.Title, storyDto.Description, storyDto.Departament) { Votes = storyDto.Votes.Select(s => new VoteViewModel(s.Id, s.UpVote, s.UserId)).ToList() });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            
+            var response = await mediator.Send(new FindStoryByIdRequest(id));
+
+            if (response == null)
+                return NotFound();
+
+            return Ok(response);
+
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(StoryViewModel), 201)]
+        [ProducesResponseType(typeof(CreateStoryRequest), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Add(StoryRequest storyRequest)
+        public async Task<IActionResult> Add([FromServices] IMediator mediator, [FromBody] CreateStoryRequest command)
         {
-            try
-            {
-                int id = await _service.Add(storyRequest.Title, storyRequest.Description, storyRequest.Departament);
-                return Created($"api/Stories/{id}", new StoryViewModel(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament));
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            int response = await mediator.Send(command);
+
+            if (response == 0)
+                return BadRequest();
+
+            return Ok(response);
         }
 
 
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(StoryViewModel), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
 
-        public async Task<IActionResult> Update(int id, StoryRequest storyRequest)
+        public async Task<IActionResult> Update([FromServices] IMediator mediator, int id, [FromBody] StoryRequest storyRequest)
         {
-            try
-            {
-                await _service.Update(new StoryDTO(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament));
-                return Ok(new StoryViewModel(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament));
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var response = await mediator
+                .Send(new UpdateStoryRequest(id, storyRequest.Title, storyRequest.Description, storyRequest.Departament));
+
+            if (response == false)
+                return BadRequest();
+
+            if (response == null)
+                return NotFound();
+
+
+            return Ok();
+
         }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromServices] IMediator mediator, int id)
         {
-            if (!await _service.Delete(id)) return NotFound();
+            if (!await mediator.Send(new DeleteStoryRequest(id)))
+                return NotFound();
 
             return Ok();
         }
 
         [HttpPost("{id}/Vote")]
-        [ProducesResponseType(typeof(VoteViewModel), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> Vote(int id, VoteRequest voteRequest)
+        public async Task<IActionResult> Vote([FromServices] IMediator mediator, int id, [FromBody] VoteRequest voteRequest)
         {
-            try
-            {
-                int voteId = await _service.Vote(voteRequest.UpVote, id, voteRequest.UserId);
+            var response = await mediator.Send(new CreateStoryVoteRequest(voteRequest.UpVote, id, voteRequest.UserId));
 
-                return Ok(new VoteViewModel(voteId, voteRequest.UpVote, voteRequest.UserId));
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch(InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            if (response == false)
+                return BadRequest();
+
+            if (response == null)
+                return NotFound();
+
+            return Ok();
         }
     }
 }
